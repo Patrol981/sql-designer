@@ -114,9 +114,6 @@ public class Keyboard {
       }
       switch (args.Code) {
         case SFML.Window.Keyboard.Key.F:
-          // var app = (RenderWindow)sender;
-          // Console.WriteLine(app.GetView());
-          // app.Close();
           var panels = _app.Panels.Where(x => x.GetEditable() == true);
           foreach (var p in panels) {
             p.AddInputField();
