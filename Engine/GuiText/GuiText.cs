@@ -28,20 +28,23 @@ public sealed class GuiTextData {
 
   public static GuiTextData GetInstance() {
     Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
-    if(s_instance == null) {
+    if (s_instance == null) {
       s_instance = new GuiTextData();
     }
     return s_instance;
   }
 }
 
-public class GuiText: IGuiText {
+public class GuiText : IGuiText {
   private Text _text = new Text();
+  public readonly uint BaseCharacterSize = 14;
+  public readonly uint MinCharacterSize = 10;
+  public readonly uint MaxCharacterSize = 30;
 
   public GuiText() {
-    _text.CharacterSize = 14;
+    _text.CharacterSize = BaseCharacterSize;
     _text.DisplayedString = "nothing to see here";
-    _text.Position = new Vector2f(0,0);
+    _text.Position = new Vector2f(0, 0);
     _text.FillColor = Color.White;
     _text.Font = GuiTextData.GetFont();
     _text.Style = Text.Styles.Regular;
@@ -75,8 +78,7 @@ public class GuiText: IGuiText {
     _text.Position = position;
   }
 
-  public void SetText(string text)
-  {
+  public void SetText(string text) {
     _text.DisplayedString = text;
   }
 

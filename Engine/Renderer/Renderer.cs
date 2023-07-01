@@ -4,62 +4,32 @@ using SFML.Window;
 
 using SQL_Designer.Gui;
 using SQL_Designer.Interactable;
+using SQL_Designer.Toolbar;
+
+using SQL_DESIGNER.Globals;
 
 namespace SQL_Designer.Renderer;
 
-public sealed class RendererData {
-  private static RendererData? s_instance;
-  private static Color s_color;
-  private static bool s_fullscreen = false;
-  private static VideoMode s_desktopResolution = VideoMode.DesktopMode;
-  private static VideoMode s_widnowedResolution = new VideoMode(1200,700);
+public class Renderer : IRenderer {
+  private readonly RenderWindow _renderWindow;
+  private FieldTypeEditor _fieldEditor;
 
-  public static Color GetColor() {
-    return s_color;
-  }
-
-  public static bool GetFullscreen() {
-    return s_fullscreen;
-  }
-
-  public static VideoMode GetWindowedWindow() {
-    return s_widnowedResolution;
-  }
-
-  public static VideoMode GetFullscreenWindow() {
-    return s_desktopResolution;
-  }
-
-  public static void SetColor(Color color) {
-    s_color = color;
-  }
-
-  public static void SetFullscreen(bool fullscreen) {
-    s_fullscreen = fullscreen;
-  }
-
-  public static RendererData GetInstance() {
-    if(s_instance == null) {
-      s_instance = new RendererData();
-    }
-    return s_instance;
-  }
-}
-
-public class Renderer: IRenderer {
-  private readonly RenderWindow _app;
-
-  // IPanel _panel = new Panel(new Vector2f(250,500), "Test");
-  public Renderer(RenderWindow app) {
-    _app = app;
+  public Renderer(RenderWindow renderWindow) {
+    _renderWindow = renderWindow;
+    _fieldEditor = new FieldTypeEditor();
 
     RendererData.GetInstance();
-    RendererData.SetColor(new Color(35,35,35));
+    RendererData.SetColor(new Color(35, 35, 35));
 
     GuiTextData.GetInstance();
   }
-  public void Update() {
-    _app.Clear(RendererData.GetColor());
-    Panels.Update(_app);
+  public void Update(List<IPanel> panels) {
+    _renderWindow.Clear(RendererData.GetColor());
+    for (short i = 0; i < panels.Count; i++) {
+      panels[i]?.Update(_renderWindow);
+    }
+    _fieldEditor.Update(_renderWindow);
   }
+
+  public FieldTypeEditor FieldTypeEditor => _fieldEditor;
 }
